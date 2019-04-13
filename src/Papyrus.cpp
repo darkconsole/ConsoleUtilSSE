@@ -4,21 +4,22 @@
 #include <string>  // string
 
 #include "RE/Skyrim.h"
+#include "REL/Relocation.h"
 
 
 namespace ConsoleUtil
 {
 	enum
 	{
-		kVersion = 1
+		kVersion = 2
 	};
 
 
 	void ExecuteCommand(RE::StaticFunctionTag*, RE::BSFixedString a_command)
 	{
 		// 41 54 41 56 41 57 48 83 EC 40 48 C7 44 24 38 FE FF FF FF 48 89 5C 24 60 48 89 6C 24 68 48 89 74 24 70 48 89 7C 24 78 4D 8B F1
-		using func_t = void(RE::Script*, RE::ConsoleManager*, std::size_t, void*);
-		RelocUnrestricted<func_t*> func(0x002E75F0);	// 1_5_73
+		using func_t = void(RE::Script*, RE::ConsoleManager*, std::size_t, RE::TESObjectREFR*);
+		REL::Offset<func_t*> func(0x002E75F0);	// 1_5_73
 
 		auto scriptFactory = RE::IFormFactory::GetConcreteFormFactoryByType<RE::Script>();
 		if (!scriptFactory) {
@@ -30,9 +31,13 @@ namespace ConsoleUtil
 			return;
 		}
 
+		auto handle = RE::Console::GetSelectedRef();
+		RE::TESObjectREFRPtr selectedRef;
+		RE::TESObjectREFR::LookupByHandle(handle, selectedRef);
+
 		std::string cmd = a_command.c_str();
 		script->unk38 = cmd.data();
-		func(script, RE::ConsoleManager::GetSingleton(), 1, 0);
+		func(script, RE::ConsoleManager::GetSingleton(), 1, selectedRef.get());
 		script->unk38 = 0;
 		delete script;
 	}
@@ -49,17 +54,43 @@ namespace ConsoleUtil
 
 	void SetSelectedReference(RE::StaticFunctionTag*, RE::TESObjectREFR* a_reference)
 	{
-		auto handle = a_reference ? a_reference->GetOrCreateRefHandle() : *g_invalidRefHandle;
+		using Message = RE::UIMessage::Message;
 
-		auto mm = RE::MenuManager::GetSingleton();
-		auto uiStrHolder = RE::UIStringHolder::GetSingleton();
-		if (!mm || !uiStrHolder) {
-			return;
-		}
+		if (a_reference) {
+			auto factory = RE::MessageDataFactoryManager::GetSingleton();
+			auto uiStrHolder = RE::UIStringHolder::GetSingleton();
+			if (!factory || !uiStrHolder) {
+				return;
+			}
 
-		auto console = mm->GetMenu<RE::Console>(uiStrHolder->console);
-		if (console) {
-			console->SetSelectedRef(handle);
+			auto creator = factory->GetCreator<RE::ConsoleData>(uiStrHolder->consoleData);
+			if (!creator) {
+				return;
+			}
+
+			auto consoleData = creator->Create();
+			if (consoleData) {
+				consoleData->unk28 = 1;
+				consoleData->handle = a_reference->GetOrCreateRefHandle();
+			} else {
+				return;
+			}
+
+			auto uiManager = RE::UIManager::GetSingleton();
+			if (uiManager) {
+				uiManager->AddMessage(uiStrHolder->console, Message::kRefresh, consoleData);
+			}
+		} else {
+			auto mm = RE::MenuManager::GetSingleton();
+			auto uiStrHolder = RE::UIStringHolder::GetSingleton();
+			if (!mm || !uiStrHolder) {
+				return;
+			}
+
+			auto console = mm->GetMenu<RE::Console>(uiStrHolder->console);
+			if (console) {
+				console->SetSelectedRef(*g_invalidRefHandle);
+			}
 		}
 	}
 
