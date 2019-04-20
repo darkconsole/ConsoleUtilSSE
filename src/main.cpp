@@ -2,10 +2,27 @@
 
 #include <ShlObj.h>  // CSIDL_MYDOCUMENTS
 
+#include "Events.h"  // MenuOpenCloseEventHandler
 #include "Papyrus.h"  // RegisterFuncs
 #include "version.h"  // VERSION_VERSTRING, VERSION_MAJOR
 
+#include "RE/Skyrim.h"
 #include "SKSE/API.h"
+
+
+namespace
+{
+	void MessageHandler(SKSE::MessagingInterface::Message* a_msg)
+	{
+		switch (a_msg->type) {
+		case SKSE::MessagingInterface::kDataLoaded:
+			auto mm = RE::MenuManager::GetSingleton();
+			mm->GetMenuOpenCloseEventSource()->AddEventSink(Events::MenuOpenCloseEventHandler::GetSingleton());
+			_MESSAGE("[MESSAGE] Registered menu open close event sink");
+			break;
+		}
+	}
+}
 
 
 extern "C" {
@@ -38,6 +55,12 @@ extern "C" {
 		_MESSAGE("[MESSAGE] ConsoleUtilSSE loaded");
 
 		if (!SKSE::Init(a_skse)) {
+			return false;
+		}
+
+		auto messaging = SKSE::GetMessagingInterface();
+		if (!messaging->RegisterListener("SKSE", MessageHandler)) {
+			_FATALERROR("[FATAL ERROR] Failed to register messaging listener!\n");
 			return false;
 		}
 

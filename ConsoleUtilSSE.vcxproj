@@ -155,10 +155,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Events.cpp" />
     <ClCompile Include="src\Papyrus.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Events.h" />
     <ClInclude Include="include\Papyrus.h" />
     <ClInclude Include="include\version.h" />
   </ItemGroup>
