@@ -11,7 +11,7 @@ namespace ConsoleUtil
 {
 	enum
 	{
-		kVersion = 2
+		kVersion = 3
 	};
 
 
