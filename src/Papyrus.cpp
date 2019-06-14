@@ -19,7 +19,7 @@ namespace ConsoleUtil
 	{
 		// 41 54 41 56 41 57 48 83 EC 40 48 C7 44 24 38 FE FF FF FF 48 89 5C 24 60 48 89 6C 24 68 48 89 74 24 70 48 89 7C 24 78 4D 8B F1
 		using func_t = void(RE::Script*, RE::ConsoleManager*, std::size_t, RE::TESObjectREFR*);
-		REL::Offset<func_t*> func(0x002E75F0);	// 1_5_73
+		REL::Offset<func_t*> func(0x002E75F0);	// 1_5_80
 
 		auto scriptFactory = RE::IFormFactory::GetConcreteFormFactoryByType<RE::Script>();
 		if (!scriptFactory) {
