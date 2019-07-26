@@ -1,5 +1,7 @@
 #include "Papyrus.h"
 
+#include "skse64/GameReferences.h"
+
 #include <cstdlib>  // size_t
 #include <string>  // string
 
@@ -71,7 +73,7 @@ namespace ConsoleUtil
 			auto consoleData = creator->Create();
 			if (consoleData) {
 				consoleData->unk28 = 1;
-				consoleData->handle = a_reference->GetOrCreateRefHandle();
+				consoleData->handle = a_reference->CreateRefHandle();
 			} else {
 				return;
 			}
