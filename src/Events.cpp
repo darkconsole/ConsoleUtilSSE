@@ -25,7 +25,7 @@ namespace Events
 			auto uiManager = RE::UIManager::GetSingleton();
 			uiManager->AddMessage(uiStrHolder->console, Message::kClose, 0);
 			auto mm = RE::MenuManager::GetSingleton();
-			mm->GetMenuOpenCloseEventSource()->RemoveEventSink(this);
+			mm->RemoveEventSink(this);
 		}
 
 		return EventResult::kContinue;

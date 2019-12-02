@@ -26,10 +26,7 @@ namespace ConsoleUtil
 			return;
 		}
 
-		auto handle = RE::Console::GetSelectedRef();
-		RE::TESObjectREFRPtr selectedRef;
-		RE::TESObjectREFR::LookupByHandle(handle, selectedRef);
-
+		auto selectedRef = RE::Console::GetSelectedRef();
 		script->SetCommand(a_command);
 		script->Invoke(selectedRef.get());
 		delete script;
@@ -38,9 +35,7 @@ namespace ConsoleUtil
 
 	RE::TESObjectREFR* GetSelectedReference(RE::StaticFunctionTag*)
 	{
-		auto handle = RE::Console::GetSelectedRef();
-		RE::TESObjectREFRPtr selectedRef;
-		RE::TESObjectREFR::LookupByHandle(handle, selectedRef);
+		auto selectedRef = RE::Console::GetSelectedRef();
 		return selectedRef.get();
 	}
 

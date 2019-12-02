@@ -1,8 +1,8 @@
-﻿#include "skse64_common/skse_version.h"  // RUNTIME_VERSION
+﻿#include "skse64_common/skse_version.h"
 
-#include "Events.h"  // MenuOpenCloseEventHandler
-#include "Papyrus.h"  // RegisterFuncs
-#include "version.h"  // VERSION_VERSTRING, VERSION_MAJOR
+#include "Events.h"
+#include "Papyrus.h"
+#include "version.h"
 
 #include "RE/Skyrim.h"
 #include "SKSE/API.h"
@@ -15,7 +15,7 @@ namespace
 		switch (a_msg->type) {
 		case SKSE::MessagingInterface::kDataLoaded:
 			auto mm = RE::MenuManager::GetSingleton();
-			mm->GetMenuOpenCloseEventSource()->AddEventSink(Events::MenuOpenCloseEventHandler::GetSingleton());
+			mm->AddEventSink(Events::MenuOpenCloseEventHandler::GetSingleton());
 			_MESSAGE("Registered menu open close event sink");
 			break;
 		}
@@ -43,11 +43,10 @@ extern "C" {
 		}
 
 		switch (a_skse->RuntimeVersion()) {
-		case RUNTIME_VERSION_1_5_73:
-		case RUNTIME_VERSION_1_5_80:
+		case RUNTIME_VERSION_1_5_97:
 			break;
 		default:
-			_FATALERROR("Unsupported runtime version %08X!\n", a_skse->RuntimeVersion());
+			_FATALERROR("Unsupported runtime version %s!\n", a_skse->UnmangledRuntimeVersion().c_str());
 			return false;
 		}
 
