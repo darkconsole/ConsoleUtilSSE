@@ -14,8 +14,8 @@ namespace
 	{
 		switch (a_msg->type) {
 		case SKSE::MessagingInterface::kDataLoaded:
-			auto mm = RE::MenuManager::GetSingleton();
-			mm->AddEventSink(Events::MenuOpenCloseEventHandler::GetSingleton());
+			auto ui = RE::UI::GetSingleton();
+			ui->AddEventSink(Events::MenuOpenCloseEventHandler::GetSingleton());
 			_MESSAGE("Registered menu open close event sink");
 			break;
 		}
@@ -69,7 +69,7 @@ extern "C" {
 		}
 
 		auto papyrus = SKSE::GetPapyrusInterface();
-		if (!papyrus->Register(ConsoleUtil::RegisterFuncs)) {
+		if (!papyrus->Register(Papyrus::Register)) {
 			_FATALERROR("Failed to register papyrus callback!\n");
 			return false;
 		}

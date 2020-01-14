@@ -8,10 +8,11 @@ namespace Events
 	class MenuOpenCloseEventHandler : public RE::BSTEventSink<RE::MenuOpenCloseEvent>
 	{
 	public:
-		using EventResult = RE::EventResult;
+		using EventResult = RE::BSEventNotifyControl;
 
 		static MenuOpenCloseEventHandler* GetSingleton();
-		virtual EventResult ReceiveEvent(RE::MenuOpenCloseEvent* a_event, RE::BSTEventSource<RE::MenuOpenCloseEvent>* a_eventSource) override;
+
+		virtual EventResult ProcessEvent(const RE::MenuOpenCloseEvent* a_event, RE::BSTEventSource<RE::MenuOpenCloseEvent>* a_eventSource) override;
 
 	private:
 		MenuOpenCloseEventHandler() = default;
