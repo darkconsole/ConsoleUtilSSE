@@ -22,7 +22,7 @@ namespace Papyrus
 
 		auto selectedRef = RE::Console::GetSelectedRef();
 		script->SetCommand(a_command);
-		script->Invoke(selectedRef.get());
+		script->CompileAndRun(selectedRef.get());
 		delete script;
 	}
 
